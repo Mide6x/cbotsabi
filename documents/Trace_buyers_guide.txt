@@ -1,0 +1,99 @@
+Onboarding
+
+Q: How do I create a new buyer account on the platform?
+A: Follow these steps:
+
+Select "Register a new account" on the landing page.
+Fill in required details (First & Last Name, Company Name, Email Address, Country/State, Phone Number, and Password).
+Accept the terms and click "Create Account."
+Choose "Buyer" as the account type.
+Enter the OTP from the verification email or click the link to log in.
+Once logged in, verify your account with KYC details.
+Account Verification / Profile Setup
+
+Q: How do I set up or update my buyer profile?
+A: Access Profile Setup by:
+
+Option 1: Dashboard Prompt - Click "Update your Account."
+Option 2: Sidebar - Go to "Profile" and complete these steps:
+Upload a company logo (optional).
+Enter the company address and bio (optional).
+Enter the contact person's name, email, and phone number, then submit.
+You can also update your password and transaction PIN from the profile page.
+Request for Quote (RFQ)
+
+Q: How do I request a quote for Agricultural Products?
+A: Navigate to "Request for Quote," select "Agricultural," and choose the product (e.g., Ginger). Enter quantity, measurement unit, moisture content, and any additional parameters. Specify currency, amount, and shipping details, then click "Submit." Expect a response within 48 hours.
+
+Q: How do I request a quote for Mineral Products?
+A: Navigate to "Request for Quote," select "Minerals," and choose the product type (e.g., Lithium). Enter quantity, measurement unit, mineral composition, currency, amount, and shipping details, then submit. Expect a response within 48 hours.
+
+Listings
+
+Q: How do I view listings associated with me as a buyer?
+A: Go to "Listings" from the side menu. Use the search bar to find listings by Product Name or filter by Unit of Measurement or Status. Click "View Details" for more information on a specific listing.
+
+Negotiations
+
+Q: How can I view and respond to negotiations?
+A: Go to "Negotiations" on the side menu.
+
+View ongoing negotiations and click "View Details" for trade terms.
+Check "Changed Terms Log" for any modifications.
+Respond to terms by accepting, re-negotiating, or rejecting.
+Trade Tracking Flow
+
+Q: What is the process to confirm a Trade Tracking Flow?
+A: After accepting negotiation terms, select "Confirm Trade Tracking Flow" to review trade steps. Click "Accept" if satisfactory, or "Reject" to suggest changes.
+
+Q: What are the key steps for tracking a local trade?
+A:
+
+Review Local Sampling Result for product quality and check "Quality Validated" if satisfactory.
+Complete Advance Payment and upload receipt.
+For Haulage, view shipment details and confirm receipt when goods are delivered.
+For Payment on Delivery, complete payment and upload the transaction receipt.
+Q: What are the key steps for tracking an international trade?
+A:
+
+Review Local Sampling Result and validate quality.
+Complete Advance Payment and upload receipt.
+View shipment details for Haulage and confirm receipt of goods.
+In Freight Forwarding, validate the product after initiating a quality test.
+Complete International Sampling and validate product quality.
+For Payment on Delivery, complete payment and upload the receipt.
+Wallet
+
+Q: How do I activate my wallet?
+A: Go to "Wallet" in the side menu, confirm the director’s information, and complete identity verification with BVN, NIN, address, and other details, then submit.
+
+Q: How do I add business information for wallet activation?
+A: Specify the business type (e.g., sole proprietorship), enter the TIN, and upload supporting documents, then submit for review.
+
+Q: How do I upload an identity document for wallet verification?
+A: Upload valid identification (e.g., passport, driver’s license) and submit.
+
+Q: How do I add a withdrawal account to my wallet?
+A: Provide your bank account number, select the bank, and ensure the name matches your bank records, then submit.
+
+Viewing Your Wallet
+
+Q: How can I manage and view my wallet?
+A: Access "Wallet" to check your balance, fund your wallet, make transfers, and view transaction history.
+
+Funding Your Wallet
+
+Q: How can I fund my wallet using Bank Transfer?
+A: Select "Fund Wallet," choose Bank Transfer, enter account details, and submit to initiate the transfer.
+
+Q: How can I fund my wallet using USSD?
+A: Select "Fund Wallet," choose USSD, select your bank, enter the amount, generate a code, and follow SMS instructions to complete the process.
+
+Transferring Funds
+
+Q: How do I transfer funds from my wallet?
+A:
+
+Select "Transfer."
+Choose a Transfer Option (e.g., to Trace Wallet or Other Banks).
+Enter recipient’s account details, amount, bank, and optional narration, then click "Transfer" to complete the transaction.
