@@ -1,99 +1,114 @@
-Onboarding
-
-Q: How do I create a new buyer account on the platform?
+Q: How do I create a new buyer account on Trace?
 A: Follow these steps:
+1. Select "Register a new account" on the landing page
+2. Enter required details: First & Last Name, Company Name, Email, Country/State, Phone Number, Password
+3. Accept terms and click "Create Account"
+4. Choose "Buyer" as account type
+5. Verify email through OTP or link
+6. Complete KYC verification
 
-Select "Register a new account" on the landing page.
-Fill in required details (First & Last Name, Company Name, Email Address, Country/State, Phone Number, and Password).
-Accept the terms and click "Create Account."
-Choose "Buyer" as the account type.
-Enter the OTP from the verification email or click the link to log in.
-Once logged in, verify your account with KYC details.
-Account Verification / Profile Setup
+Q: What are the steps to set up my buyer profile?
+A: You can set up your profile in two ways:
+1. Dashboard Option: Click "Update your Account"
+2. Sidebar Option: Go to "Profile" and:
+   - Upload company logo (optional)
+   - Enter company address
+   - Add company bio (optional)
+   - Provide contact person details
+   - Update password and PIN if needed
 
-Q: How do I set up or update my buyer profile?
-A: Access Profile Setup by:
+Q: How do I submit an agricultural product quote request?
+A: Follow these steps:
+1. Go to "Request for Quote"
+2. Select "Agricultural"
+3. Choose product type (e.g., Ginger)
+4. Enter: quantity, measurement unit, moisture content
+5. Specify currency and amount
+6. Add shipping details
+7. Submit and wait for response within 48 hours
 
-Option 1: Dashboard Prompt - Click "Update your Account."
-Option 2: Sidebar - Go to "Profile" and complete these steps:
-Upload a company logo (optional).
-Enter the company address and bio (optional).
-Enter the contact person's name, email, and phone number, then submit.
-You can also update your password and transaction PIN from the profile page.
-Request for Quote (RFQ)
+Q: How do I submit a mineral product quote request?
+A: Follow these steps:
+1. Go to "Request for Quote"
+2. Select "Minerals"
+3. Choose product type (e.g., Lithium)
+4. Enter: quantity, measurement unit, mineral composition
+5. Specify currency and amount
+6. Add shipping details
+7. Submit and wait for response within 48 hours
 
-Q: How do I request a quote for Agricultural Products?
-A: Navigate to "Request for Quote," select "Agricultural," and choose the product (e.g., Ginger). Enter quantity, measurement unit, moisture content, and any additional parameters. Specify currency, amount, and shipping details, then click "Submit." Expect a response within 48 hours.
+Q: How do I manage negotiations on Trace?
+A: To handle negotiations:
+1. Go to "Negotiations" in sidebar
+2. View ongoing negotiations
+3. Click "View Details" for specific terms
+4. Check "Changed Terms Log" for modifications
+5. Choose to:
+   - Accept terms and proceed
+   - Re-negotiate terms
+   - Reject and terminate trade
 
-Q: How do I request a quote for Mineral Products?
-A: Navigate to "Request for Quote," select "Minerals," and choose the product type (e.g., Lithium). Enter quantity, measurement unit, mineral composition, currency, amount, and shipping details, then submit. Expect a response within 48 hours.
+Q: What are the steps for tracking a local trade?
+A: Local trade tracking involves:
+1. Review Local Sampling Result and validate quality
+2. Complete Advance Payment and upload receipt
+3. Monitor Haulage:
+   - View shipment details
+   - Confirm receipt of goods
+4. Complete Payment on Delivery and upload receipt
 
-Listings
-
-Q: How do I view listings associated with me as a buyer?
-A: Go to "Listings" from the side menu. Use the search bar to find listings by Product Name or filter by Unit of Measurement or Status. Click "View Details" for more information on a specific listing.
-
-Negotiations
-
-Q: How can I view and respond to negotiations?
-A: Go to "Negotiations" on the side menu.
-
-View ongoing negotiations and click "View Details" for trade terms.
-Check "Changed Terms Log" for any modifications.
-Respond to terms by accepting, re-negotiating, or rejecting.
-Trade Tracking Flow
-
-Q: What is the process to confirm a Trade Tracking Flow?
-A: After accepting negotiation terms, select "Confirm Trade Tracking Flow" to review trade steps. Click "Accept" if satisfactory, or "Reject" to suggest changes.
-
-Q: What are the key steps for tracking a local trade?
-A:
-
-Review Local Sampling Result for product quality and check "Quality Validated" if satisfactory.
-Complete Advance Payment and upload receipt.
-For Haulage, view shipment details and confirm receipt when goods are delivered.
-For Payment on Delivery, complete payment and upload the transaction receipt.
-Q: What are the key steps for tracking an international trade?
-A:
-
-Review Local Sampling Result and validate quality.
-Complete Advance Payment and upload receipt.
-View shipment details for Haulage and confirm receipt of goods.
-In Freight Forwarding, validate the product after initiating a quality test.
-Complete International Sampling and validate product quality.
-For Payment on Delivery, complete payment and upload the receipt.
-Wallet
+Q: What are the steps for tracking an international trade?
+A: International trade tracking includes:
+1. Review Local Sampling Result and validate quality
+2. Complete Advance Payment and upload receipt
+3. Monitor Haulage and confirm receipt
+4. Freight Forwarding:
+   - Receive products
+   - Initiate quality test
+   - Validate specifications
+5. International Sampling:
+   - Schedule quality test
+   - Review results
+   - Validate specifications
+6. Complete Payment on Delivery and upload receipt
 
 Q: How do I activate my wallet?
-A: Go to "Wallet" in the side menu, confirm the director’s information, and complete identity verification with BVN, NIN, address, and other details, then submit.
+A: Wallet activation requires:
+1. Go to "Wallet" in sidebar
+2. Verify director's information:
+   - Phone number
+   - BVN
+   - NIN
+   - Address details
+3. Add business information:
+   - Business type
+   - TIN
+   - Supporting documents
+4. Upload identity document
+5. Add withdrawal account details
 
-Q: How do I add business information for wallet activation?
-A: Specify the business type (e.g., sole proprietorship), enter the TIN, and upload supporting documents, then submit for review.
-
-Q: How do I upload an identity document for wallet verification?
-A: Upload valid identification (e.g., passport, driver’s license) and submit.
-
-Q: How do I add a withdrawal account to my wallet?
-A: Provide your bank account number, select the bank, and ensure the name matches your bank records, then submit.
-
-Viewing Your Wallet
-
-Q: How can I manage and view my wallet?
-A: Access "Wallet" to check your balance, fund your wallet, make transfers, and view transaction history.
-
-Funding Your Wallet
-
-Q: How can I fund my wallet using Bank Transfer?
-A: Select "Fund Wallet," choose Bank Transfer, enter account details, and submit to initiate the transfer.
-
-Q: How can I fund my wallet using USSD?
-A: Select "Fund Wallet," choose USSD, select your bank, enter the amount, generate a code, and follow SMS instructions to complete the process.
-
-Transferring Funds
+Q: How do I fund my wallet?
+A: Two funding options available:
+1. Bank Transfer:
+   - Select Bank Transfer
+   - Enter account details
+   - Submit and complete transfer
+2. USSD:
+   - Select USSD
+   - Choose your bank
+   - Enter amount
+   - Follow SMS instructions
 
 Q: How do I transfer funds from my wallet?
-A:
-
-Select "Transfer."
-Choose a Transfer Option (e.g., to Trace Wallet or Other Banks).
-Enter recipient’s account details, amount, bank, and optional narration, then click "Transfer" to complete the transaction.
+A: To transfer funds:
+1. Click "Transfer"
+2. Choose transfer type:
+   - Trace Wallet
+   - Other Banks
+   - Own Bank
+3. Enter:
+   - Recipient account details
+   - Amount
+   - Bank name
+   - Optional narration
+4. Click "Transfer" to complete

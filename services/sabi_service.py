@@ -5,7 +5,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 import os
 import glob
 import re
-from functions.sabi_functions import save_new_order, save_return_request
+from functions.sabi_functions import save_new_order, save_return_request, save_issue_report, save_callback_request, save_track_order
 
 # Load environment variables
 openai_api_key = os.getenv("OPENAI_API_KEY")
@@ -58,6 +58,27 @@ async def handle_sabi_query(query, user_name):
                    f"Order Number: {order_number}\n" + \
                    f"Reason: {return_reason}\n" + \
                    "Our team will process it shortly!"
+    
+    # Handle issue reports
+    elif "issue" in query.lower():
+        save_issue_report(user_name, query)
+        return "Thank you for sharing! We're investigating and will get back to you within 5 minutes."
+    
+    # Handle callback requests
+    elif "callback" in query.lower():
+        phone_match = re.search(r'(?:phone|number|call)?\s*[:]\s*(\d+)', query, re.IGNORECASE)
+        if phone_match:
+            phone_number = phone_match.group(1)
+            save_callback_request(user_name, phone_number)
+            return f"Thank you! We'll call you shortly at {phone_number} from 02013303232."
+    
+    # Handle order tracking
+    elif "track" in query.lower() and "order" in query.lower():
+        order_match = re.search(r'[A-Z]{2}\d{8}', query)
+        if order_match:
+            order_number = order_match.group(0)
+            save_track_order(user_name, order_number)
+            return "Thank you! We're checking your order status now."
     
     # If not a direct order or return, use QA chain
     result = qa_chain.invoke(query)
