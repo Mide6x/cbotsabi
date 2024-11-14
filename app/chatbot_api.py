@@ -7,6 +7,11 @@ from services.trace_service import handle_trace_query
 from services.katsu_service import handle_katsu_query
 from functions.sabi_functions import router as sabi_router
 from typing import List
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
+from fastapi.middleware.cors import CORSMiddleware
 
 # Load environment variables
 load_dotenv()
@@ -41,6 +46,15 @@ app.include_router(
     prefix="/sabi",
     tags=["Sabi Market Operations"],
     responses={404: {"description": "Not found"}},
+)
+
+# Add after creating the FastAPI app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Enhanced request model with better documentation
@@ -137,3 +151,12 @@ async def read_root():
         "docs_url": "/docs",
         "redoc_url": "/redoc"
     }
+
+
+# Initialize templates
+templates = Jinja2Templates(directory="templates")
+
+# UI route
+@app.get("/ui", response_class=HTMLResponse)
+async def chat_ui(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
