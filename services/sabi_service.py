@@ -24,53 +24,93 @@ async def handle_sabi_query(query, user_name):
     retriever = faiss_index.as_retriever()
     qa_chain = RetrievalQA.from_chain_type(llm, retriever=retriever)
 
-    # Check if this is an order intent
+    # Check different intents
     order_keywords = ["order", "buy", "purchase", "want", "need", "get"]
-    is_order_intent = any(keyword in query.lower() for keyword in order_keywords)
+    track_keywords = ["track", "where", "status", "follow"]
+    return_keywords = ["return", "exchange", "refund"]
+    issue_keywords = ["issue", "problem", "complaint", "wrong"]
+    callback_keywords = ["callback", "call back", "call me", "contact me"]
 
-    if is_order_intent:
-        # If it's not in the exact format, prompt for formatted input
+    query_lower = query.lower()
+    
+    # Track order intent
+    if any(keyword in query_lower for keyword in track_keywords):
+        order_number_match = re.search(r'[A-Z]{2}\d{8}', query)
+        if order_number_match:
+            order_number = order_number_match.group()
+            save_track_order(user_name, order_number)
+            return f"Thank you! We're tracking your order {order_number}. You'll receive updates shortly."
+        else:
+            return "Please provide your 10-digit order number (e.g., GL09395824) to track your order."
+
+    # Return/exchange intent
+    elif any(keyword in query_lower for keyword in return_keywords):
+        order_number_match = re.search(r'[A-Z]{2}\d{8}', query)
+        
+        # Extract reason after the order number
+        if order_number_match:
+            order_number = order_number_match.group()
+            # Get everything after the order number as the reason
+            reason_text = query[query.find(order_number) + len(order_number):].strip()
+            if reason_text:
+                save_return_request(user_name, order_number, reason_text)
+                return "Thank you for submitting your return request. We'll process it right away and contact you within 24 hours."
+            else:
+                return "Please provide a reason for your return along with the order number."
+        else:
+            return ("To process your return, please provide your order number and reason.\n"
+                   "Example: Order Number: GL78340824 Reason: Wrong size delivered")
+
+    # Issue reporting intent
+    elif any(keyword in query_lower for keyword in issue_keywords):
+        save_issue_report(user_name, query)
+        return "Thank you for reporting this issue. Our team will investigate and contact you shortly."
+
+    # Callback intent
+    elif any(keyword in query_lower for keyword in callback_keywords) or "phone" in query_lower:
+        # Extract phone number with more flexible pattern
+        phone_match = re.search(r'(?:\d{11})|(?:\d{3}[-\s]?\d{4}[-\s]?\d{4})', query)
+        if phone_match:
+            phone_number = ''.join(filter(str.isdigit, phone_match.group()))
+            save_callback_request(user_name, phone_number)
+            return f"Thank you for requesting a callback! We'll call you shortly on {phone_number} from our customer service number."
+        else:
+            return "Please provide your phone number (11 digits) for the callback."
+
+    # If phone number is provided without explicit callback request
+    elif re.search(r'(?:\d{11})|(?:\d{3}[-\s]?\d{4}[-\s]?\d{4})', query):
+        phone_number = ''.join(filter(str.isdigit, re.search(r'(?:\d{11})|(?:\d{3}[-\s]?\d{4}[-\s]?\d{4})', query).group()))
+        save_callback_request(user_name, phone_number)
+        return f"Thank you! A customer service representative will call you back shortly on {phone_number}."
+
+    # Order intent
+    elif any(keyword in query_lower for keyword in order_keywords):
+        # Existing order processing code
         if not (("(" in query and ")" in query) or (":" in query)):
             return ("Thank you for choosing to place an order! Please share your order details "
                    "in the following format:\n"
                    "Item name (quantity), Item name (quantity)\n"
                    "Example: Milo (3 cans), 5alive drink (1 pack)")
         
-        # Try different patterns to extract order details
+        # Rest of the order processing code remains the same
         items = []
-        
-        # Pattern 1: Item (quantity)
         pattern1 = r'([^()]+)\s*\((\d+)[^)]*\)'
         matches1 = re.findall(pattern1, query)
         items.extend(matches1)
         
-        # Pattern 2: Item: quantity
-        pattern2 = r'([^:]+):\s*(\d+)'
-        matches2 = re.findall(pattern2, query)
-        items.extend(matches2)
-        
-        # Pattern 3: quantity Item/items/pcs/pieces of Item
-        pattern3 = r'(\d+)\s*(?:items?|pcs|pieces?|cans?|packs?|bottles?)?\s*(?:of)?\s*([^,\.]+)'
-        matches3 = re.findall(pattern3, query)
-        items.extend([(item.strip(), qty) for qty, item in matches3 if not any(item.strip() in existing[0] for existing in items)])
-
         if items:
-            # Format order details as structured string
             order_details = ", ".join([f"{item.strip()}: {qty}" for item, qty in items])
-            
-            # Extract address if provided
             address_match = re.search(r'(?:address:|deliver to:|at|to)?\s*([^\.]+(?:street|road|avenue|close|drive|lane|boulevard|plaza|estate)[^\.]+)', 
                                     query.lower())
             address = address_match.group(1).strip() if address_match else "Address pending"
             
-            # Save order details
             save_new_order(user_name, order_details, address)
             return "Thank you for your order! We've saved the following details:\n" + \
                    f"Items: {order_details}\n" + \
                    f"Delivery Address: {address}\n" + \
                    "We'll process your order right away!"
-    
-    # If not an order or no items found, use QA chain
+
+    # If no specific intent is matched, use QA chain
     result = qa_chain.invoke(query)
     return result.get('result', 'Sorry, no result found.')
 

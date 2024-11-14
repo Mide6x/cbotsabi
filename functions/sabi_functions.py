@@ -124,37 +124,27 @@ def save_track_order(name: str, order_number: str):
 # API endpoints
 @router.get("/sabineworders", response_model=List[OrderData])
 async def get_new_orders():
-    """Returns all new orders as JSON."""
-    try:
-        file_path = 'customerrecords/neworder.csv'
-        if not os.path.exists(file_path):
-            return []
-        
-        orders = []
-        with open(file_path, 'r', encoding='utf-8') as file:
+    """Fetch all new orders from CSV"""
+    orders = []
+    file_path = 'customerrecords/neworder.csv'
+    if os.path.exists(file_path):
+        with open(file_path, 'r', newline='', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 orders.append(OrderData(**row))
-        return orders
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    return orders
 
 @router.get("/sabireturns", response_model=List[ReturnData])
 async def get_returns():
-    """Returns all return requests as JSON."""
-    try:
-        file_path = 'customerrecords/orderreturns.csv'
-        if not os.path.exists(file_path):
-            return []
-        
-        returns = []
-        with open(file_path, 'r', encoding='utf-8') as file:
+    """Fetch all returns from CSV"""
+    returns = []
+    file_path = 'customerrecords/orderreturns.csv'
+    if os.path.exists(file_path):
+        with open(file_path, 'r', newline='', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 returns.append(ReturnData(**row))
-        return returns
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    return returns
 
 @router.get("/sabiissues", response_model=List[IssueData])
 async def get_issues():
@@ -192,18 +182,13 @@ async def get_callbacks():
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/sabitracking", response_model=List[TrackOrderData])
-async def get_tracking_requests():
-    """Returns all order tracking requests as JSON."""
-    try:
-        file_path = 'customerrecords/trackorder.csv'
-        if not os.path.exists(file_path):
-            return []
-        
-        tracking_requests = []
-        with open(file_path, 'r', encoding='utf-8') as file:
+async def get_tracking():
+    """Fetch all tracking requests from CSV"""
+    tracking = []
+    file_path = 'customerrecords/trackorder.csv'
+    if os.path.exists(file_path):
+        with open(file_path, 'r', newline='', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:
-                tracking_requests.append(TrackOrderData(**row))
-        return tracking_requests
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) 
+                tracking.append(TrackOrderData(**row))
+    return tracking 

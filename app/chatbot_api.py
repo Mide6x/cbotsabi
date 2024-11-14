@@ -160,3 +160,7 @@ templates = Jinja2Templates(directory="templates")
 @app.get("/ui", response_class=HTMLResponse)
 async def chat_ui(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+
+@app.get("/records", response_class=HTMLResponse)
+async def customer_records(request: Request):
+    return templates.TemplateResponse("customer_records.html", {"request": request})
