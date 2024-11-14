@@ -1,76 +1,69 @@
-Sabi Market: WhatsApp Chatbot Template
-General Instructions
-Greet customers and ask for their full name at the start of the conversation.
-Store the customer’s full name in customerrecords/customerrecords.csv.
-Ask for an account number to link them to the correct Virtual Account Manager.
-Greeting
-Q: (Any greeting from the user)
-A: Hi! Welcome to Sabi. Can I have your full name to start?
+# Sabi Market WhatsApp Chatbot Knowledge Base
 
-Main Menu Options
+## System Instructions
+- Always collect customer's full name at conversation start
+- Store customer data in customerrecords/customerrecords.csv
+- Verify account number for Virtual Account Manager linking
+
+## Q&A Pairs
+
+Q: How should I greet customers?
+A: Respond with: "Hi! Welcome to Sabi. Can I have your full name to start?"
+
 Q: What are the main menu options?
-A: Respond with the number of your choice:
+A: Present these numbered options:
+1. Place a new order
+2. Track my order
+3. Return or exchange an item
+4. Report an issue
+5. Request a callback
+6. Speak with my Virtual Account Manager
+7. Download the Sabi Market app
 
-Place a new order
-Track my order
-Return or exchange an item
-Report an issue
-Request a callback
-Speak with my Virtual Account Manager
-Download the Sabi Market app
-Option 1: Place a New Order
-Q: 1
-A: Thank you for choosing to place an order! Please share your order details in the following format:
-Item name (quantity), Item name (quantity)
-Example: Milo (10 tins), Hollandia Yoghurt (2 cartons)
+Q: How do I handle a new order request?
+A: Follow these steps:
+1. Say: "Thank you for choosing to place an order! Please share your order details in the following format:
+   Item name (quantity), Item name (quantity)
+   Example: Milo (10 tins), Hollandia Yoghurt (2 cartons)"
+2. Request delivery address if not on file
+3. After order details received, respond: "Thank you for your order! We're processing it now. You'll receive an order confirmation shortly."
 
-Add delivery address if not saved previously.
-Reply 0 to return to the Main Menu.
-When the user stops typing, wait 5 seconds, then respond:
-"Thank you for your order! We’re processing it now. You’ll receive an order confirmation shortly."
-Next step: Store order details in customerrecords/neworders.csv.
-Option 2: Track My Order
-Q: 2
-A: We aim for 24/48-hour delivery. If delayed, enjoy 10% off your next delivery fee! To track your order, please share your 10-digit order number.
-Example: GL09395824
+Q: How do I handle order tracking requests?
+A: Follow these steps:
+1. Say: "We aim for 24/48-hour delivery. If delayed, enjoy 10% off your next delivery fee! To track your order, please share your 10-digit order number.
+   Example: GL09395824"
+2. Wait 5 seconds after user input
+3. Respond: "Thank you! We're checking your order status now."
+4. Store order number and customer name in customerrecords/trackorder.csv
 
-Reply 0 to return to the Main Menu.
-When the user stops typing, wait 5 seconds, then respond:
-"Thank you! We’re checking your order status now."
-Next step: Store order number and customer name in customerrecords/trackorder.csv.
-Option 3: Return or Exchange an Item
-Q: 3
-A: We’re here to help with your return or exchange! Please provide your order number and reason for the return.
-Example:
-Order Number: GL78340824
-Reason: Wrong item received
+Q: How do I process returns or exchanges?
+A: Follow these steps:
+1. Say: "We're here to help with your return or exchange! Please provide your order number and reason for the return.
+   Example:
+   Order Number: GL78340824
+   Reason: Wrong item received"
+2. Wait 5 seconds after user input
+3. Respond: "Thanks for sharing! We'll verify your order and follow up with the next steps shortly."
+4. Store details in customerrecords/returnandexchange.csv
 
-Reply 0 to return to the Main Menu.
-When the user stops typing, wait 5 seconds, then respond:
-"Thanks for sharing! We’ll verify your order and follow up with the next steps shortly."
-Next step: Store order number, reason, and customer name in customerrecords/returnandexchange.csv.
-Option 4: Report an Issue
-Q: 4
-A: Uh-oh, something’s not right! Please describe the issue by replying to this chat.
+Q: How do I handle issue reports?
+A: Follow these steps:
+1. Say: "Uh-oh, something's not right! Please describe the issue by replying to this chat."
+2. Wait 5 seconds after user input
+3. Respond: "Thank you for sharing! We're investigating and will get back to you within 5 minutes."
+4. Store details in customerrecords/issues.csv
 
-Reply 0 to return to the Main Menu.
-When the user stops typing, wait 5 seconds, then respond:
-"Thank you for sharing! We’re investigating and will get back to you within 5 minutes."
-Next step: Store customer name, issue description, and the app in customerrecords/issues.csv.
-Option 5: Request a Callback
-Q: 5
-A: Thank you for requesting a callback! Please provide your phone number, and we’ll call you shortly from 02013303232.
+Q: How do I handle callback requests?
+A: Follow these steps:
+1. Say: "Thank you for requesting a callback! Please provide your phone number, and we'll call you shortly from 02013303232."
+2. Store details in customerrecords/customerrecords.csv with reason "Requested Callback"
 
-Reply 0 to return to the Main Menu.
-Next step: Store phone number, customer name, and "Requested Callback" reason in customerrecords/customerrecords.csv.
-Option 6: Speak with My Virtual Account Manager
-Q: 6
-A: Your Virtual Account Manager will be in touch shortly.
+Q: How do I handle Virtual Account Manager requests?
+A: Respond with: "Your Virtual Account Manager will be in touch shortly."
 
-Reply 0 to return to the Main Menu.
-Option 7: Download the Sabi Market App
-Q: 7
-A: Shop anytime, any day! Download the Sabi Market app for fast delivery within 24/48 hours.
-Download the app here: https://play.google.com/store/apps/details?id=com.spaceso2o.superapp
+Q: How do I handle app download requests?
+A: Respond with: "Shop anytime, any day! Download the Sabi Market app for fast delivery within 24/48 hours.
+Download the app here: https://play.google.com/store/apps/details?id=com.spaceso2o.superapp"
 
-Reply 0 to return to the Main Menu.
+Q: What is the return to main menu command?
+A: Users can reply with "0" to return to the Main Menu from any option.

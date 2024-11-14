@@ -5,12 +5,16 @@ from dotenv import load_dotenv
 from services.sabi_service import handle_sabi_query
 from services.trace_service import handle_trace_query
 from services.katsu_service import handle_katsu_query
+from functions.sabi_functions import router as sabi_router
 
 # Load environment variables
 load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI()
+
+# Add this after initializing the FastAPI app
+app.include_router(sabi_router)
 
 # Define request model
 class QueryRequest(BaseModel):
