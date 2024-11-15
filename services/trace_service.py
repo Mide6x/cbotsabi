@@ -14,12 +14,25 @@ embeddings = OpenAIEmbeddings(api_key=openai_api_key)
 # Function to handle Trace queries
 async def handle_trace_query(query, user_name):
     # Load Trace-specific documents and process the query
-    documents = load_documents_for_app("trace")
-    limited_content = limit_content_size(documents)
+    documents = load_documents_for_app()
+    text_chunks = limit_content_size(documents)
 
-    faiss_index = FAISS.from_texts(limited_content, embeddings)
-    retriever = faiss_index.as_retriever()
-    qa_chain = RetrievalQA.from_chain_type(llm, retriever=retriever)
+    # Create FAISS index from text chunks
+    faiss_index = FAISS.from_texts(
+        texts=text_chunks,
+        embedding=embeddings,
+        metadatas=[{"source": f"chunk_{i}"} for i in range(len(text_chunks))]
+    )
+    
+    retriever = faiss_index.as_retriever(
+        search_type="similarity",
+        search_kwargs={"k": 3}
+    )
+    qa_chain = RetrievalQA.from_chain_type(
+        llm=llm,
+        chain_type="stuff",
+        retriever=retriever
+    )
 
     result = qa_chain.invoke(query)
     return result.get('result', 'Sorry, no result found.')
@@ -36,17 +49,21 @@ def load_documents_for_app(app_name):
     return []
 
 def limit_content_size(content_list, max_tokens=2000):
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=512, chunk_overlap=0)  
-    limited_content = []
-    token_count = 0
-
-    for content in content_list:
-        chunks = text_splitter.split_text(content)
-        for chunk in chunks:
-            chunk_tokens = len(chunk.split())
-            if token_count + chunk_tokens > max_tokens:
-                return limited_content
-            limited_content.append(chunk)
-            token_count += chunk_tokens
+    """Limit content size while preserving complete Q&A pairs"""
+    if not content_list:
+        return []
+        
+    # Join all content with newlines to preserve formatting
+    combined_content = "\n".join(content_list)
     
-    return limited_content
+    # Split content into chunks
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=200,
+        length_function=len
+    )
+    
+    # Split text into chunks
+    texts = text_splitter.split_text(combined_content)
+    
+    return texts

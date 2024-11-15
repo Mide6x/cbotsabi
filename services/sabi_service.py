@@ -15,14 +15,27 @@ llm = OpenAI(api_key=openai_api_key)
 embeddings = OpenAIEmbeddings(api_key=openai_api_key)
 
 # Function to handle Sabi queries
-async def handle_sabi_query(query, user_name):
+async def handle_sabi_query(query, user_name, user_address):
     # Load Sabi-specific documents and process the query
-    documents = load_documents_for_app("sabi")
-    limited_content = limit_content_size(documents)
+    documents = load_documents_for_app()
+    text_chunks = limit_content_size(documents)
 
-    faiss_index = FAISS.from_texts(limited_content, embeddings)
-    retriever = faiss_index.as_retriever()
-    qa_chain = RetrievalQA.from_chain_type(llm, retriever=retriever)
+    # Create FAISS index from text chunks
+    faiss_index = FAISS.from_texts(
+        texts=text_chunks,
+        embedding=embeddings,
+        metadatas=[{"source": f"chunk_{i}"} for i in range(len(text_chunks))]
+    )
+    
+    retriever = faiss_index.as_retriever(
+        search_type="similarity",
+        search_kwargs={"k": 3}
+    )
+    qa_chain = RetrievalQA.from_chain_type(
+        llm=llm,
+        chain_type="stuff",
+        retriever=retriever
+    )
 
     # Check different intents
     order_keywords = ["order", "buy", "purchase", "want", "need", "get"]
@@ -84,58 +97,61 @@ async def handle_sabi_query(query, user_name):
         return f"Thank you! A customer service representative will call you back shortly on {phone_number}."
 
     # Order intent
-    elif any(keyword in query_lower for keyword in order_keywords):
-        # Existing order processing code
-        if not (("(" in query and ")" in query) or (":" in query)):
+    elif any(keyword in query_lower for keyword in order_keywords) or re.search(r'\(\d+\s*(?:pack|packs|can|cans|bottle|bottles)\)', query_lower):
+        pattern = r'([^()]+)\s*\((\d+)\s*(?:pack|packs|can|cans|bottle|bottles)\)'
+        matches = re.findall(pattern, query)
+        
+        if not matches:
             return ("Thank you for choosing to place an order! Please share your order details "
                    "in the following format:\n"
-                   "Item name (quantity), Item name (quantity)\n"
+                   "Item name (quantity packs/cans/bottles)\n"
                    "Example: Milo (3 cans), 5alive drink (1 pack)")
         
-        # Rest of the order processing code remains the same
-        items = []
-        pattern1 = r'([^()]+)\s*\((\d+)[^)]*\)'
-        matches1 = re.findall(pattern1, query)
-        items.extend(matches1)
+        order_details = ", ".join([f"{item.strip()}: {qty}" for item, qty in matches])
+        save_new_order(user_name, order_details, user_address)
         
-        if items:
-            order_details = ", ".join([f"{item.strip()}: {qty}" for item, qty in items])
-            address_match = re.search(r'(?:address:|deliver to:|at|to)?\s*([^\.]+(?:street|road|avenue|close|drive|lane|boulevard|plaza|estate)[^\.]+)', 
-                                    query.lower())
-            address = address_match.group(1).strip() if address_match else "Address pending"
-            
-            save_new_order(user_name, order_details, address)
-            return "Thank you for your order! We've saved the following details:\n" + \
-                   f"Items: {order_details}\n" + \
-                   f"Delivery Address: {address}\n" + \
-                   "We'll process your order right away!"
+        return ("Thank you for your order! We've saved the following details:\n"
+               f"Items: {order_details}\n"
+               f"Delivery Address: {user_address}\n"
+               "We'll process your order right away!")
 
     # If no specific intent is matched, use QA chain
     result = qa_chain.invoke(query)
     return result.get('result', 'Sorry, no result found.')
-
-def load_documents_for_app(app_name):
-    app_document_paths = {
-        "sabi": "documents/Sabi_Market_WhatsApp_Chatbot_Template.txt",
-    }
-    path = app_document_paths.get(app_name)
-    if path and os.path.exists(path):
-        with open(path, 'r', encoding='utf-8') as file:
-            return [file.read()]
-    return []
+def load_documents_for_app():
+    """Load all documents from the Sabi Market folder"""
+    folder = "documents/sabiMarket"
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+        
+    documents = []
+    for filename in os.listdir(folder):
+        if filename.endswith('.txt'):
+            file_path = os.path.join(folder, filename)
+            try:
+                with open(file_path, 'r', encoding='utf-8') as file:
+                    documents.append(file.read())
+            except Exception as e:
+                print(f"Error reading {file_path}: {str(e)}")
+                 
+    return documents
 
 def limit_content_size(content_list, max_tokens=2000):
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=512, chunk_overlap=0)  
-    limited_content = []
-    token_count = 0
-
-    for content in content_list:
-        chunks = text_splitter.split_text(content)
-        for chunk in chunks:
-            chunk_tokens = len(chunk.split())
-            if token_count + chunk_tokens > max_tokens:
-                return limited_content
-            limited_content.append(chunk)
-            token_count += chunk_tokens
+    """Limit content size while preserving complete Q&A pairs"""
+    if not content_list:
+        return []
+        
+    # Join all content with newlines to preserve formatting
+    combined_content = "\n".join(content_list)
     
-    return limited_content
+    # Split content into chunks
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=200,
+        length_function=len
+    )
+    
+    # Split text into chunks
+    texts = text_splitter.split_text(combined_content)
+    
+    return texts

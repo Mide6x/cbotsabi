@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Form, File, UploadFile
 from pydantic import BaseModel, Field
 import os
 from dotenv import load_dotenv
@@ -12,6 +12,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
 from fastapi.middleware.cors import CORSMiddleware
+import shutil
 
 # Load environment variables
 load_dotenv()
@@ -20,24 +21,55 @@ load_dotenv()
 app = FastAPI(
     title="Sabi's Chatbot API",
     description="""
-    This API provides chatbot functionality for Sabi Market, including:
-    * Order processing
-    * Order returns
-    * Issue reporting
-    * Callback requests
-    * Order tracking
-    
-    ## Available Services
-    * **Sabi Market**: Main e-commerce platform
-    * **Trace**: Logistics tracking
-    * **Katsu Bank**: Banking services
+    # Sabi Market Chatbot API
+
+    This API provides chatbot functionality for Sabi Market's WhatsApp integration.
+
+    ## Features
+    * Order Processing: Place new orders with item quantities
+    * Order Returns: Process return requests with order numbers
+    * Issue Reporting: Submit customer issues and complaints
+    * Callback Requests: Schedule customer service callbacks
+    * Order Tracking: Track order status using order numbers
+    * Document Upload: Upload training documents for each app
+
+    ## Request Format
+    All requests should include:
+    - `app`: Service identifier ("sabi", "trace", or "katsu")
+    - `name`: Customer's name
+    - `query`: The customer's message
+    - `address`: Delivery address (optional)
+    - `phone_number`: Contact number (optional)
+
+    ## Response Format
+    All responses include:
+    - `answer`: The chatbot's response message
+
+    ## Document Upload
+    Upload training documents using the `/upload-document` endpoint:
+    - Supported apps: sabi, trace, katsu
+    - File format: .txt files
+    - Documents are stored in app-specific folders
     """,
     version="1.0.0",
-    contact={
-        "name": "Sabi Market Support",
-        "url": "https://www.sabi.am/support",
-        "email": "support@sabi.am",
-    },
+    openapi_tags=[
+        {
+            "name": "Chatbot",
+            "description": "Main chatbot interaction endpoints"
+        },
+        {
+            "name": "Document Management",
+            "description": "Upload and manage training documents"
+        },
+        {
+            "name": "Sabi Market Operations",
+            "description": "Data retrieval endpoints for customer records"
+        },
+        {
+            "name": "Status",
+            "description": "API health check endpoints"
+        }
+    ]
 )
 
 # Add this after initializing the FastAPI app
@@ -62,7 +94,7 @@ class QueryRequest(BaseModel):
     query: str = Field(
         ..., 
         description="The user's query or request",
-        example="I want to order Milo (5 tins), Rice (2 bags) address: 123 Main Street, Lagos"
+        example="I want to order Milo (5 tins), Rice (2 bags)"
     )
     name: str = Field(
         ..., 
@@ -74,13 +106,19 @@ class QueryRequest(BaseModel):
         description="App choice (sabi, trace, or katsu)",
         example="sabi"
     )
+    address: str = Field(
+        ...,
+        description="Customer's delivery address",
+        example="123 Main Street, Lagos"
+    )
 
     class Config:
         schema_extra = {
             "example": {
-                "query": "I want to order Milo (5 tins), Rice (2 bags) address: 123 Main Street, Lagos",
+                "query": "I want to order Milo (5 tins), Rice (2 bags)",
                 "name": "John Doe",
-                "app": "sabi"
+                "app": "sabi",
+                "address": "123 Main Street, Lagos"
             }
         }
 
@@ -121,7 +159,7 @@ async def get_chatbot_response(query_request: QueryRequest):
     """
     try:
         if query_request.app.lower() == "sabi":
-            answer = await handle_sabi_query(query_request.query, query_request.name)
+            answer = await handle_sabi_query(query_request.query, query_request.name, query_request.address)
         elif query_request.app.lower() == "trace":
             answer = await handle_trace_query(query_request.query, query_request.name)
         elif query_request.app.lower() == "katsu":
@@ -164,3 +202,51 @@ async def chat_ui(request: Request):
 @app.get("/records", response_class=HTMLResponse)
 async def customer_records(request: Request):
     return templates.TemplateResponse("customer_records.html", {"request": request})
+
+@app.post("/upload-document",
+    tags=["Document Management"],
+    summary="Upload Training Document",
+    description="""
+    Upload a text document for training the chatbot.
+    
+    The document will be stored in the appropriate app folder:
+    - sabi: documents/sabiMarket
+    - trace: documents/trace
+    - katsu: documents/katsu
+    
+    Only .txt files are supported.
+    """
+)
+async def upload_document(
+    app: str = Form(..., description="Target app (sabi, trace, or katsu)"),
+    document: UploadFile = File(..., description="Text document to upload (.txt)")
+):
+    """Upload a document for training the chatbot"""
+    try:
+        app_folders = {
+            "sabi": "documents/sabiMarket",
+            "trace": "documents/trace",
+            "katsu": "documents/katsu"
+        }
+        
+        folder = app_folders.get(app.lower())
+        if not folder:
+            raise HTTPException(status_code=400, detail="Invalid application specified")
+            
+        if not document.filename.endswith('.txt'):
+            raise HTTPException(status_code=400, detail="Only .txt files are supported")
+            
+        os.makedirs(folder, exist_ok=True)
+        file_path = os.path.join(folder, document.filename)
+        
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(document.file, buffer)
+            
+        return {
+            "message": f"Document successfully uploaded to {folder}",
+            "filename": document.filename,
+            "app": app
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
