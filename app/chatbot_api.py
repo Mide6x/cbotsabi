@@ -250,3 +250,9 @@ async def upload_document(
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+
+@app.get("/upload", response_class=HTMLResponse)
+async def upload_ui(request: Request):
+    return templates.TemplateResponse("document_upload.html", {"request": request})
